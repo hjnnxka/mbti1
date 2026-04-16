@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MBTI探索之旅 - 发现你的性格密码</title>
+<style>
+/* ========== CSS变量管理颜色主题 ========== */
+:root {
+  --indigo: #5C6BC0;
+  --indigo-light: #7986CB;
+  --indigo-dark: #3F51B5;
+  --teal: #26A69A;
+  --teal-light: #4DB6AC;
+  --teal-dark: #00897B;
+  --mint: #E8F5E9;
+  --pink: #FCE4EC;
+  --blue: #E3F2FD;
+  --yellow: #FFF8E1;
+  --white: #FFFFFF;
+  --gray-50: #FAFAFA;
+  --gray-100: #F5F5F5;
+  --gray-200: #EEEEEE;
+  --gray-300: #E0E0E0;
+  --gray-400: #BDBDBD;
+  --gray-500: #9E9E9E;
+  --gray-600: #757575;
+  --gray-700: #616161;
+  --gray-800: #424242;
+  --gray-900: #212121;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+  --shadow-xl: 0 12px 36px rgba(0,0,0,0.15);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========== 全局重置 ========== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  background: linear-gradient(135deg, var(--mint) 0%, var(--blue) 50%, var(--pink) 100%);
+  min-height: 100vh;
+  color: var(--gray-800);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ========== 页面切换动画 ========== */
+.section {
+  display: none;
+  min-height: 100vh;
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.section.active {
+  display: block;
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========== 首页样式 ========== */
+.home-header {
+  text-align: center;
+  padding: 60px 20px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.home-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--indigo), var(--teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.home-header .subtitle {
+  font-size: 1.1rem;
+  color: var(--gray-600);
+  position: relative;
+  z-index: 1;
+}
+
+/* 浮动几何图形装饰 */
+.floating-shapes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.shape {
+  position: absolute;
+  opacity: 0.15;
+}
+
+.shape-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--indigo);
+  top: 10%;
+  left: 10%;
+  animation: floatShape 6s ease-in-out infinite;
+}
+
+.shape-triangle {
+  width: 0;
+  height: 0;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+  border-bottom: 52px solid var(--teal);
+  top: 20%;
+  right: 15%;
+  animation: floatShape 8s ease-in-out infinite reverse;
+}
+
+.shape-square {
+  width: 40px;
+  height: 40px;
+  background: var(--pink);
+  border-radius: 8px;
+  bottom: 20%;
+  left: 20%;
+  animation: floatShape 7s ease-in-out infinite 1s;
+}
+
+.shape-circle2 {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: var(--teal);
+  top: 60%;
+  right: 10%;
+  animation: floatShape 5s ease-in-out infinite 0.5s;
+}
+
+.shape-square2 {
+  width: 25px;
+  height: 25px;
+  background: var(--indigo-light);
+  border-radius: 6px;
+  top: 40%;
+  left: 5%;
+  animation: floatShape 9s ease-in-out infinite 2s;
+}
+
+@keyframes floatShape {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-20px) rotate(5deg); }
+  50% { transform: translateY(-10px) rotate(-3deg); }
+  75% { transform: translateY(-25px) rotate(3deg); }
+}
+
+/* ========== 测试卡片网格 ========== */
+.test-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  padding: 10px 0 40px;
+}
+
+@media (min-width: 768px) {
+  .test-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .home-header h1 {
+    font-size: 3rem;
+  }
+}
+
+.test-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 24px 20px;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.test-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+.test-card:nth-child(1) { background: var(--mint); }
+.test-card:nth-child(2) { background: var(--pink); }
+.test-card:nth-child(3) { background: var(--blue); }
+.test-card:nth-child(4) { background: var(--yellow); }
+.test-card:nth-child(5) { background: var(--blue); }
+.test-card:nth-child(6) { background: var(--mint); }
+
+.test-card .card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.test-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gray-800);
+  margin-bottom: 8px;
+}
+
+.test-card .card-desc {
+  font-size: 0.8rem;
+  color: var(--gray-600);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.test-card .question-count {
+  display: inline-block;
+  background: rgba(92, 107, 192, 0.1);
+  color: var(--indigo);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+
+.test-card .start-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--indigo), var(--teal));
+  color: white;
+  border: none;
+  padding: 8px 24px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.test-card .start-btn:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-md);
+}
+
+/* ========== 测试页面通用样式 ========== */
+.test-header {
+  text-align: center;
+  padding: 30px 0 20px;
+}
+
+.test-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--indigo);
+  margin-bottom: 8px;
+}
+
+.test-header p {
+  font-size: 0.9rem;
+  color: var(--gray-600);
+}
+
+/* 进度条 */
+.progress-bar-container {
+  background: var(--gray-200);
+  border-radius: 10px;
+  height: 8px;
+  margin: 20px 0;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--indigo), var(--teal));
+  border-radius: 10px;
+  transition: width 0.5s ease;
+  width: 0%;
+}
+
+.progress-text {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--gray-500);
+  margin-bottom: 20px;
+}
+
+/* 题目卡片 */
+.question-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 30px 24px;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 20px;
+  animation: fadeInUp 0.4s ease;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.question-card .question-number {
+  font-size: 0.8rem;
+  color: var(--indigo);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.question-card .question-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--gray-800);
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+/* 选项样式 */
+.options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.option-btn {
+  display: block;
+  width: 100%;
+  padding: 16px 20px;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  font-size: 0.95rem;
+  color: var(--gray-700);
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: left;
+  line-height: 1.5;
+}
+
+.option-btn:hover {
+  border-color: var(--indigo-light);
+  background: var(--blue);
+  transform: translateX(4px);
+}
+
+.option-btn.selected {
+  border-color: var(--indigo);
+  background: linear-gradient(135deg, rgba(92,107,192,0.1), rgba(38,166,154,0.1));
+  color: var(--indigo-dark);
+  font-weight: 600;
+  transform: scale(1.02);
+}
+
+/* 四选项样式 */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 480px) {
+  .options-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========== 加载动画 ========== */
+.loading-container {
+  display: none;
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.loading-container.active {
+  display: block;
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid var(--gray-200);
+  border-top-color: var(--indigo);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 24px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 1.1rem;
+  color: var(--gray-600);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ========== 结果页样式 ========== */
+.result-container {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  padding: 40px 24px;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  animation: fadeInUp 0.6s ease;
+  max-width: 600px;
+  margin: 30px auto;
+}
+
+.result-type-badge {
+  display: inline-block;
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--indigo), var(--teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+  letter-spacing: 4px;
+}
+
+.result-emoji {
+  font-size: 4rem;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.result-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin-bottom: 8px;
+}
+
+.result-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.result-tag {
+  background: var(--blue);
+  color: var(--indigo);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.result-description {
+  font-size: 0.95rem;
+  color: var(--gray-600);
+  line-height: 1.8;
+  margin-bottom: 24px;
+  text-align: left;
+  padding: 0 10px;
+}
+
+.result-section {
+  text-align: left;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+}
+
+.result-section h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--indigo);
+  margin-bottom: 10px;
+}
+
+.result-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.result-section li {
+  padding: 6px 0;
+  font-size: 0.9rem;
+  color: var(--gray-700);
+  padding-left: 20px;
+  position: relative;
+}
+
+.result-section li::before {
+  content: '•';
+  position: absolute;
+  left: 4px;
+  color: var(--teal);
+  font-weight: bold;
+}
+
+.result-info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--gray-200);
+  font-size: 0.9rem;
+}
+
+.result-info-row:last-child {
+  border-bottom: none;
+}
+
+.result-info-label {
+  color: var(--gray-500);
+}
+
+.result-info-value {
+  color: var(--gray-800);
+  font-weight: 600;
+}
+
+/* 按钮组 */
+.btn-group {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 12px 28px;
+  border: none;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--indigo), var(--teal));
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+  background: var(--white);
+  color: var(--indigo);
+  border: 2px solid var(--indigo);
+}
+
+.btn-secondary:hover {
+  background: var(--blue);
+  transform: translateY(-2px);
+}
+
+.btn-share {
+  background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+  color: white;
+}
+
+.btn-share:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ========== 维度分析条 ========== */
+.dimension-bar {
+  margin: 12px 0;
+}
+
+.dimension-bar .dim-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--gray-600);
+  margin-bottom: 4px;
+}
+
+.dimension-bar .dim-track {
+  height: 10px;
+  background: var(--gray-200);
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+}
+
+.dimension-bar .dim-left {
+  height: 100%;
+  background: var(--indigo);
+  border-radius: 5px 0 0 5px;
+  transition: width 1s ease;
+}
+
+.dimension-bar .dim-right {
+  height: 100%;
+  background: var(--teal);
+  border-radius: 0 5px 5px 0;
+  transition: width 1s ease;
+}
+
+/* ========== Toast提示 ========== */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--gray-800);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+  white-space: nowrap;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ========== 返回按钮 ========== */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--indigo);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 8px 0;
+  margin-bottom: 10px;
+  transition: var(--transition);
+}
+
+.back-btn:hover {
+  color: var(--indigo-dark);
+}
+
+/* ========== 动物结果特殊样式 ========== */
+.animal-result-card {
+  background: linear-gradient(135deg, var(--mint), var(--blue));
+  border-radius: var(--radius-xl);
+  padding: 40px 24px;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  animation: fadeInUp 0.6s ease;
+  max-width: 600px;
+  margin: 30px auto;
+}
+
+.animal-emoji {
+  font-size: 5rem;
+  display: block;
+  margin-bottom: 16px;
+  animation: bounceIn 0.8s ease;
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.animal-name {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin-bottom: 4px;
+}
+
+.animal-mbti {
+  font-size: 1rem;
+  color: var(--indigo);
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+/* ========== 风格结果卡片 ========== */
+.style-result-card {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  padding: 40px 24px;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  animation: fadeInUp 0.6s ease;
+  max-width: 600px;
+  margin: 30px auto;
+}
+
+.style-icon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.style-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--indigo);
+  margin-bottom: 8px;
+}
+
+.style-mbti-range {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  margin-bottom: 20px;
+}
+
+.advice-box {
+  background: var(--yellow);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin: 20px 0;
+  text-align: left;
+}
+
+.advice-box h4 {
+  color: var(--gray-800);
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+}
+
+.advice-box p, .advice-box li {
+  font-size: 0.9rem;
+  color: var(--gray-700);
+  line-height: 1.7;
+}
+
+.advice-box ul {
+  padding-left: 20px;
+}
+
+/* ========== 美食结果 ========== */
+.food-result-card {
+  background: linear-gradient(135deg, var(--yellow), var(--pink));
+  border-radius: var(--radius-xl);
+  padding: 40px 24px;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  animation: fadeInUp 0.6s ease;
+  max-width: 600px;
+  margin: 30px auto;
+}
+
+.food-emoji {
+  font-size: 4rem;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.food-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin-bottom: 8px;
+}
+
+.food-recommend {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin: 16px 0;
+  text-align: left;
+}
+
+.food-recommend h4 {
+  color: var(--indigo);
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.food-recommend p {
+  color: var(--gray-700);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+/* ========== 恋爱配对 ========== */
+.match-card {
+  background: var(--pink);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin: 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.match-card .match-heart {
+  font-size: 1.5rem;
+}
+
+.match-card .match-info {
+  text-align: left;
+}
+
+.match-card .match-label {
+  font-size: 0.8rem;
+  color: var(--gray-500);
+}
+
+.match-card .match-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+/* ========== 页脚 ========== */
+.footer {
+  text-align: center;
+  padding: 30px 0;
+  color: var(--gray-500);
+  font-size: 0.8rem;
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== 首页 ==================== -->
+<div id="home" class="section active">
+  <div class="home-header">
+    <div class="floating-shapes">
+      <div class="shape shape-circle"></div>
+      <div class="shape shape-triangle"></div>
+      <div class="shape shape-square"></div>
+      <div class="shape shape-circle2"></div>
+      <div class="shape shape-square2"></div>
+    </div>
+    <h1>MBTI探索之旅</h1>
+    <p class="subtitle">发现你的性格密码</p>
+  </div>
+
+  <div class="test-grid">
+    <!-- 测试1：经典MBTI -->
+    <div class="test-card" onclick="startTest('classic')">
+      <span class="card-icon">🧠</span>
+      <h3>经典MBTI测试</h3>
+      <p class="card-desc">探索你的四维性格类型</p>
+      <span class="question-count">28道题</span>
+      <button class="start-btn">开始测试</button>
+    </div>
+    <!-- 测试2：动物人格 -->
+    <div class="test-card" onclick="startTest('animal')">
+      <span class="card-icon">🦉</span>
+      <h3>动物人格测试</h3>
+      <p class="card-desc">你是哪种动物？</p>
+      <span class="question-count">12道题</span>
+      <button class="start-btn">开始测试</button>
+    </div>
+    <!-- 测试3：社交风格 -->
+    <div class="test-card" onclick="startTest('social')">
+      <span class="card-icon">🤝</span>
+      <h3>社交风格测试</h3>
+      <p class="card-desc">发现你的社交密码</p>
+      <span class="question-count">10道题</span>
+      <button class="start-btn">开始测试</button>
+    </div>
+    <!-- 测试4：恋爱类型 -->
+    <div class="test-card" onclick="startTest('love')">
+      <span class="card-icon">💕</span>
+      <h3>恋爱类型测试</h3>
+      <p class="card-desc">探索你的恋爱风格</p>
+      <span class="question-count">10道题</span>
+      <button class="start-btn">开始测试</button>
+    </div>
+    <!-- 测试5：职场测试 -->
+    <div class="test-card" onclick="startTest('career')">
+      <span class="card-icon">💼</span>
+      <h3>职场MBTI测试</h3>
+      <p class="card-desc">找到你的职场定位</p>
+      <span class="question-count">10道题</span>
+      <button class="start-btn">开始测试</button>
+    </div>
+    <!-- 测试6：美食偏好 -->
+    <div class="test-card" onclick="startTest('food')">
+      <span class="card-icon">🍜</span>
+      <h3>美食偏好测试</h3>
+      <p class="card-desc">你的味蕾是什么性格？</p>
+      <span class="question-count">8道题</span>
+      <button class="start-btn">开始测试</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>MBTI探索之旅 - 纯娱乐，仅供参考</p>
+  </div>
+</div>
+
+<!-- ==================== 测试页面容器 ==================== -->
+<div id="test-page" class="section">
+  <button class="back-btn" onclick="goHome()">← 返回首页</button>
+  <div class="test-header">
+    <h2 id="test-title"></h2>
+    <p id="test-subtitle"></p>
+  </div>
+  <div class="progress-bar-container">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+  <p class="progress-text" id="progress-text">第 1 题 / 共 0 题</p>
+  <div id="question-area"></div>
+</div>
+
+<!-- ==================== 加载页面 ==================== -->
+<div id="loading-page" class="section">
+  <div class="loading-container active">
+    <div class="loading-spinner"></div>
+    <p class="loading-text">正在分析你的性格...</p>
+  </div>
+</div>
+
+<!-- ==================== 结果页面 ==================== -->
+<div id="result-page" class="section">
+  <div id="result-area"></div>
+</div>
+
+<!-- Toast提示 -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ==================== 全局状态 ====================
+let currentTest = null;
+let currentQuestion = 0;
+let answers = {};
+
+// ==================== 页面切换函数 ====================
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => {
+    s.classList.remove('active');
+  });
+  const target = document.getElementById(id);
+  target.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function goHome() {
+  showSection('home');
+  currentTest = null;
+  currentQuestion = 0;
+  answers = {};
+}
+
+// ==================== Toast提示 ====================
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// ==================== 开始测试 ====================
+function startTest(type) {
+  currentTest = type;
+  currentQuestion = 0;
+  answers = {};
+  showSection('test-page');
+  renderQuestion();
+}
+
+// ==================== 渲染题目 ====================
+function renderQuestion() {
+  const testData = testConfigs[currentTest];
+  const total = testData.questions.length;
+  const q = testData.questions[currentQuestion];
+
+  document.getElementById('test-title').textContent = testData.title;
+  document.getElementById('test-subtitle').textContent = testData.subtitle;
+
+  // 更新进度条
+  const progress = ((currentQuestion) / total) * 100;
+  document.getElementById('progress-bar').style.width = progress + '%';
+  document.getElementById('progress-text').textContent = `第 ${currentQuestion + 1} 题 / 共 ${total} 题`;
+
+  // 渲染题目
+  const area = document.getElementById('question-area');
+  let optionsHTML = '';
+
+  if (testData.optionType === 'ab') {
+    // AB两选项
+    optionsHTML = '<div class="options-container">';
+    q.options.forEach((opt, i) => {
+      optionsHTML += `<button class="option-btn" onclick="selectOption(${i})">${opt}</button>`;
+    });
+    optionsHTML += '</div>';
+  } else if (testData.optionType === 'grid') {
+    // 四选项网格
+    optionsHTML = '<div class="options-grid">';
+    q.options.forEach((opt, i) => {
+      optionsHTML += `<button class="option-btn" onclick="selectOption(${i})">${opt}</button>`;
+    });
+    optionsHTML += '</div>';
+  }
+
+  area.innerHTML = `
+    <div class="question-card">
+      <div class="question-number">Q${currentQuestion + 1}</div>
+      <div class="question-text">${q.text}</div>
+      ${optionsHTML}
+    </div>
+  `;
+}
+
+// ==================== 选择选项 ====================
+function selectOption(index) {
+  const testData = testConfigs[currentTest];
+  const q = testData.questions[currentQuestion];
+
+  // 记录答案
+  answers[currentQuestion] = index;
+
+  // 选中动画
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.classList.remove('selected'));
+  btns[index].classList.add('selected');
+
+  // 延迟后进入下一题
+  setTimeout(() => {
+    currentQuestion++;
+    if (currentQuestion < testData.questions.length) {
+      renderQuestion();
+    } else {
+      // 完成所有题目，显示加载
+      showSection('loading-page');
+      setTimeout(() => {
+        showResult();
+      }, 2000);
+    }
+  }, 400);
+}
+
+// ==================== 显示结果 ====================
+function showResult() {
+  const testData = testConfigs[currentTest];
+  const result = testData.calculateResult(answers);
+  const area = document.getElementById('result-area');
+  area.innerHTML = result.html;
+  showSection('result-page');
+}
+
+// ==================== 复制结果到剪贴板 ====================
+function copyResult(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('结果已复制到剪贴板！');
+  }).catch(() => {
+    // 降级方案
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('结果已复制到剪贴板！');
+  });
+}
+
+// ==================== 重新测试 ====================
+function retakeTest() {
+  startTest(currentTest);
+}
+
+// ==================== 16种MBTI完整解析数据 ====================
+const mbtiData = {
+  'INTJ': {
+    name: '建筑师',
+    emoji: '🏛️',
+    tags: ['战略思维', '独立自主', '追求卓越', '远见卓识'],
+    description: 'INTJ是天生的战略家，拥有强大的分析能力和远见。他们善于制定长期计划，对知识和能力有着不懈的追求。虽然外表看起来冷淡，但内心深处有着强烈的信念和对完美的执着。他们喜欢独立思考，不随波逐流。',
+    strengths: ['战略规划能力强', '逻辑思维严密', '独立自主', '目标明确', '善于解决复杂问题'],
+    weaknesses: ['可能显得过于冷淡', '对他人要求过高', '不善于表达情感', '有时过于固执'],
+    famous: '尼古拉·特斯拉、伊隆·马斯克、克里斯托弗·诺兰',
+    bestMatch: 'ENFP、ENTP',
+    advice: '学会倾听他人的想法，不要总是认为自己的方案最优。适当放松标准，允许自己和他人犯错。多关注情感层面，培养同理心。'
+  },
+  'INTP': {
+    name: '逻辑学家',
+    emoji: '🔬',
+    tags: ['逻辑分析', '求知欲强', '创新思维', '独立思考'],
+    description: 'INTP是充满好奇心的思考者，对知识和理论有着无尽的渴望。他们善于发现事物之间的逻辑关系，喜欢从不同角度分析问题。虽然有时显得心不在焉，但一旦找到感兴趣的话题，就会展现出惊人的专注力和洞察力。',
+    strengths: ['逻辑分析能力极强', '创造力丰富', '客观公正', '适应力强', '知识面广'],
+    weaknesses: ['容易陷入理论脱离实际', '不善于时间管理', '社交能力较弱', '有时过于挑剔'],
+    famous: '爱因斯坦、比尔·盖茨、达尔文',
+    bestMatch: 'ENTJ、ENFJ',
+    advice: '试着将想法付诸实践，不要只停留在理论层面。学会管理时间，设定明确的截止日期。多参加社交活动，锻炼沟通能力。'
+  },
+  'ENTJ': {
+    name: '指挥官',
+    emoji: '👑',
+    tags: ['领导力', '果断决策', '高效执行', '目标导向'],
+    description: 'ENTJ是天生的领导者，拥有强大的组织能力和决断力。他们善于制定战略并推动团队执行，对效率有着极高的追求。在他们的字典里没有"不可能"三个字，他们总是充满自信地迎接挑战。',
+    strengths: ['领导能力出众', '决策果断', '执行力强', '善于激励他人', '目标明确'],
+    weaknesses: ['可能过于强势', '缺乏耐心', '忽视他人感受', '有时过于直接'],
+    famous: '史蒂夫·乔布斯、拿破仑、玛格丽特·撒切尔',
+    bestMatch: 'INTP、INFP',
+    advice: '学会倾听团队成员的意见，不要总是独断专行。注意说话方式，多考虑他人的感受。适当放慢节奏，享受过程。'
+  },
+  'ENTP': {
+    name: '辩论家',
+    emoji: '💡',
+    tags: ['思维敏捷', '善于辩论', '创新求变', '充满活力'],
+    description: 'ENTP是充满创意的思考者，喜欢挑战传统观念和权威。他们思维敏捷，善于从不同角度看问题，是天生的创新者。在讨论中，他们总是能提出令人耳目一新的观点，让身边的人感到兴奋。',
+    strengths: ['创新能力极强', '思维敏捷', '善于沟通', '适应力强', '充满魅力'],
+    weaknesses: ['容易三分钟热度', '不够注重细节', '可能过于争辩', '有时缺乏执行力'],
+    famous: '本杰明·富兰克林、马克·吐温、托马斯·爱迪生',
+    bestMatch: 'INTJ、INFJ',
+    advice: '学会坚持，不要总是被新事物吸引。注重细节，把想法落实为行动。在辩论中注意语气，避免伤害他人。'
+  },
+  'INFJ': {
+    name: '提倡者',
+    emoji: '🌙',
+    tags: ['理想主义', '洞察力强', '富有同理心', '追求意义'],
+    description: 'INFJ是最稀有的MBTI类型，拥有深刻的洞察力和强烈的理想主义。他们善于理解他人的情感和需求，总是默默地为身边的人付出。虽然外表安静，但内心有着坚定的信念和对美好世界的向往。',
+    strengths: ['洞察力极强', '富有同理心', '坚持信念', '善于倾听', '有深度'],
+    weaknesses: ['容易过度理想化', '难以拒绝他人', '容易内耗', '有时过于敏感'],
+    famous: '马丁·路德·金、特蕾莎修女、甘地',
+    bestMatch: 'ENTP、ENFP',
+    advice: '学会设定边界，不要总是为他人牺牲自己。接受世界的不完美，关注当下的幸福。适当表达自己的需求。'
+  },
+  'INFP': {
+    name: '调停者',
+    emoji: '🌈',
+    tags: ['理想主义', '富有创造力', '温柔善良', '追求真实'],
+    description: 'INFP是温柔的理想主义者，拥有丰富的内心世界和强大的创造力。他们对美好事物有着天生的感知力，总是追求真实和有意义的生活。虽然有时显得害羞和内向，但他们内心充满了热情和对世界的爱。',
+    strengths: ['创造力丰富', '富有同理心', '忠于自我', '善于表达情感', '适应力强'],
+    weaknesses: ['容易自我怀疑', '不切实际', '过于敏感', '难以面对冲突'],
+    famous: '莎士比亚、威廉·莎士比亚、J.R.R.托尔金',
+    bestMatch: 'ENTJ、ENFJ',
+    advice: '相信自己的能力，不要总是自我否定。学会面对冲突，表达自己的真实想法。设定可实现的目标，一步一步来。'
+  },
+  'ENFJ': {
+    name: '主人公',
+    emoji: '⭐',
+    tags: ['领导魅力', '善于激励', '富有同理心', '组织能力强'],
+    description: 'ENFJ是天生的领袖和激励者，拥有强大的感染力和组织能力。他们善于发现他人的潜力，并帮助他人成长。在他们身边，每个人都会感到被理解和被重视。他们是团队的灵魂人物。',
+    strengths: ['领导魅力出众', '善于激励他人', '组织能力强', '富有同理心', '沟通能力好'],
+    weaknesses: ['可能过于在意他人评价', '容易忽视自身需求', '有时过于理想化', '难以做冷酷的决定'],
+    famous: '奥巴马、奥普拉·温弗瑞、马丁·路德·金',
+    bestMatch: 'INTP、INFP',
+    advice: '不要总是把别人的需求放在第一位，也要关注自己。学会说"不"，设定合理的边界。接受不是所有人都能被帮助的事实。'
+  },
+  'ENFP': {
+    name: '竞选者',
+    emoji: '🦋',
+    tags: ['热情洋溢', '创造力强', '善于社交', '乐观向上'],
+    description: 'ENFP是充满热情和创造力的冒险家，对生活充满了好奇和热爱。他们善于发现生活中的美好，并能用自己独特的视角感染身边的人。他们是天生的社交达人，总能轻松地与各种人建立联系。',
+    strengths: ['热情感染力强', '创造力丰富', '善于社交', '乐观积极', '适应力强'],
+    weaknesses: ['注意力容易分散', '不善于计划', '可能过于情绪化', '有时缺乏条理'],
+    famous: '罗宾·威廉姆斯、马克·吐温、小罗伯特·唐尼',
+    bestMatch: 'INTJ、INFJ',
+    advice: '学会专注，一次只做一件事。制定计划并坚持执行。在热情之余，也要注意细节和后续跟进。'
+  },
+  'ISTJ': {
+    name: '物流师',
+    emoji: '📋',
+    tags: ['可靠踏实', '注重细节', '责任心强', '有条不紊'],
+    description: 'ISTJ是最可靠的类型之一，他们注重事实和细节，做事有条不紊。他们是传统和秩序的守护者，对自己的责任有着高度的使命感。虽然看起来严肃，但他们的可靠和稳定是团队最宝贵的财富。',
+    strengths: ['责任心极强', '注重细节', '可靠稳定', '善于组织', '坚持原则'],
+    weaknesses: ['可能过于固执', '不善于适应变化', '表达情感有困难', '有时过于刻板'],
+    famous: '乔治·华盛顿、安格拉·默克尔、沃伦·巴菲特',
+    bestMatch: 'ESFP、ESTP',
+    advice: '学会灵活变通，不是所有事情都需要按计划进行。尝试表达自己的情感，让他人更好地了解你。偶尔放松一下，享受不确定性。'
+  },
+  'ISFJ': {
+    name: '守卫者',
+    emoji: '🛡️',
+    tags: ['温暖体贴', '忠诚可靠', '乐于助人', '注重细节'],
+    description: 'ISFJ是最温暖体贴的类型之一，他们总是默默地关心和照顾身边的人。他们忠诚、可靠、勤奋，是朋友和家人最坚实的后盾。虽然他们不张扬，但他们的付出和贡献是不可或缺的。',
+    strengths: ['温暖体贴', '忠诚可靠', '善于照顾他人', '注重细节', '有耐心'],
+    weaknesses: ['容易过度付出', '不善于拒绝', '害怕改变', '可能压抑自己的需求'],
+    famous: '碧昂丝、英国凯特王妃、文森特·梵高',
+    bestMatch: 'ESTP、ESFP',
+    advice: '学会关注自己的需求，不要总是牺牲自己。勇敢地说"不"，你的感受同样重要。尝试新事物，走出舒适区。'
+  },
+  'ESTJ': {
+    name: '总经理',
+    emoji: '📊',
+    tags: ['高效管理', '组织能力强', '务实果断', '注重规则'],
+    description: 'ESTJ是高效的管理者和组织者，他们善于建立秩序并确保一切按计划运行。他们务实、果断、有责任心，是天生的管理者。在他们看来，没有解决不了的问题，只有不够努力的人。',
+    strengths: ['管理能力出众', '组织能力强', '务实高效', '责任心强', '善于执行'],
+    weaknesses: ['可能过于强势', '不够灵活', '忽视他人感受', '有时过于传统'],
+    famous: '亨利·福特、希拉里·克林顿、杰克·韦尔奇',
+    bestMatch: 'ISFP、ISTP',
+    advice: '学会倾听不同的声音，不要总是用一种方式管理。关注团队成员的情感需求。在坚持原则的同时，保持一定的灵活性。'
+  },
+  'ESFJ': {
+    name: '执政官',
+    emoji: '🎉',
+    tags: ['热心助人', '善于社交', '组织能力强', '忠诚可靠'],
+    description: 'ESFJ是最热心和最善于社交的类型之一，他们总是关心他人的需求并乐于帮助。他们善于营造和谐的氛围，是聚会和团队中不可或缺的人物。他们的热情和体贴让身边的人感到温暖和被重视。',
+    strengths: ['热心助人', '社交能力强', '善于营造和谐', '忠诚可靠', '有责任心'],
+    weaknesses: ['过于在意他人评价', '可能过于控制', '不善于接受批评', '有时忽视自身需求'],
+    famous: '泰勒·斯威夫特、珍妮弗·加纳、休·杰克曼',
+    bestMatch: 'ISTP、ISFP',
+    advice: '不要让他人的评价左右你的自我价值。学会接受批评，将其视为成长的机会。多关注自己的内心需求。'
+  },
+  'ISTP': {
+    name: '鉴赏家',
+    emoji: '🔧',
+    tags: ['动手能力强', '冷静理性', '独立自主', '善于分析'],
+    description: 'ISTP是冷静而务实的行动派，他们善于用双手创造和解决问题。他们对机械和工具有天生的亲和力，喜欢探索事物的工作原理。虽然话不多，但在关键时刻，他们总能用实际行动证明自己的价值。',
+    strengths: ['动手能力极强', '冷静理性', '善于解决问题', '适应力强', '独立自主'],
+    weaknesses: ['情感表达有困难', '可能过于冒险', '不善于长期规划', '有时显得冷漠'],
+    famous: '迈克尔·乔丹、克林特·伊斯特伍德、布鲁斯·李',
+    bestMatch: 'ESTJ、ESFJ',
+    advice: '学会表达自己的情感，让他人了解你的内心。在做决定前多思考后果。尝试制定长期计划，不要只活在当下。'
+  },
+  'ISFP': {
+    name: '探险家',
+    emoji: '🎨',
+    tags: ['艺术气质', '温柔敏感', '热爱自由', '活在当下'],
+    description: 'ISFP是充满艺术气质的探险家，他们对美有着天生的感知力。他们温柔、敏感、热爱自由，喜欢用行动而非言语表达自己。他们活在当下，善于发现生活中那些被他人忽略的美好瞬间。',
+    strengths: ['审美能力强', '温柔善良', '动手能力强', '适应力强', '忠于自我'],
+    weaknesses: ['不善于长期规划', '容易逃避冲突', '可能过于敏感', '有时缺乏自信'],
+    famous: '迈克尔·杰克逊、鲍勃·迪伦、玛丽莲·梦露',
+    bestMatch: 'ESTJ、ESFJ',
+    advice: '学会为未来做打算，不要总是随波逐流。勇敢面对冲突，表达自己的真实想法。相信自己的能力，你比你想象的更强大。'
+  },
+  'ESTP': {
+    name: '企业家',
+    emoji: '🚀',
+    tags: ['行动力强', '善于社交', '务实果断', '喜欢冒险'],
+    description: 'ESTP是充满活力的行动派，他们喜欢冒险和挑战。他们善于观察和应对当下的情况，总能在危机中保持冷静并找到解决方案。他们是天生的谈判者和说服者，善于用自己的魅力影响他人。',
+    strengths: ['行动力极强', '应变能力好', '善于社交', '务实果断', '有魅力'],
+    weaknesses: ['容易冲动', '不善于长期规划', '可能过于追求刺激', '有时缺乏耐心'],
+    famous: '唐纳德·特朗普、麦当娜、杰克·尼科尔森',
+    bestMatch: 'ISTJ、ISFJ',
+    advice: '学会控制冲动，三思而后行。制定长期目标并坚持执行。在追求刺激的同时，也要注意安全和稳定。'
+  },
+  'ESFP': {
+    name: '表演者',
+    emoji: '🎭',
+    tags: ['热情开朗', '善于表演', '活在当下', '感染力强'],
+    description: 'ESFP是最具感染力的类型之一，他们热情、开朗、善于表演。他们是天生的娱乐家，总能让身边的人感到快乐。他们活在当下，善于享受生活中的每一刻，是聚会中当之无愧的焦点。',
+    strengths: ['感染力极强', '善于社交', '乐观积极', '适应力强', '有表演天赋'],
+    weaknesses: ['容易逃避问题', '不善于长期规划', '可能过于追求享乐', '有时缺乏深度'],
+    famous: '玛丽莲·梦露、艾尔顿·约翰、威尔·史密斯',
+    bestMatch: 'ISTJ、ISFJ',
+    advice: '学会面对问题，不要总是逃避。制定一些长期目标，培养深度思考的习惯。在享受当下的同时，也要为未来做准备。'
+  }
+};
+
+// ==================== 测试1：经典MBTI性格测试（28题） ====================
+const classicQuestions = [
+  // E/I 维度 (7题)
+  { text: '周末到了，你更想怎么度过？', options: ['约朋友出去聚会、逛街或参加活动', '宅在家里看书、追剧或做自己的事'], dim: 'EI', scores: [1, -1] },
+  { text: '在一个陌生的社交场合，你通常会？', options: ['主动和陌生人搭话，很快融入新圈子', '安静地观察，等别人来找你说话'], dim: 'EI', scores: [1, -1] },
+  { text: '长时间独处后，你的感觉是？', options: ['有点闷，迫不及待想找人聊天', '感觉很充实，还想再待一会儿'], dim: 'EI', scores: [1, -1] },
+  { text: '做决定时，你更倾向于？', options: ['先和别人讨论，听听大家的意见', '自己安静地想一想，内心就有了答案'], dim: 'EI', scores: [1, -1] },
+  { text: '你更喜欢的工作方式是？', options: ['和团队一起头脑风暴、协作完成', '独立完成自己的部分，减少干扰'], dim: 'EI', scores: [1, -1] },
+  { text: '关于你的朋友圈，下面哪个更接近？', options: ['朋友很多，各行各业都有，经常聚会', '几个知心好友就够了，深交比广交重要'], dim: 'EI', scores: [1, -1] },
+  { text: '遇到烦心事，你通常会？', options: ['找朋友倾诉，说出来就好多了', '自己消化，写日记或者默默想通'], dim: 'EI', scores: [1, -1] },
+  // S/N 维度 (7题)
+  { text: '学习新东西时，你更喜欢？', options: ['看具体的例子和实操教程，边做边学', '先理解整体概念和原理，再动手尝试'], dim: 'SN', scores: [1, -1] },
+  { text: '描述一次旅行经历，你会更关注？', options: ['具体的行程、美食、景点和花销', '旅行中的感受、灵感、和对人生的新思考'], dim: 'SN', scores: [1, -1] },
+  { text: '你觉得下面哪种说法更对？', options: ['事实胜于雄辩，眼见为实', '想象力比知识更重要，一切皆有可能'], dim: 'SN', scores: [1, -1] },
+  { text: '你更信任？', options: ['经过验证的经验和可靠的数据', '自己的直觉和第六感'], dim: 'SN', scores: [1, -1] },
+  { text: '看一本书或电影时，你更在意？', options: ['情节是否合理、细节是否真实', '是否有深层的隐喻和哲学思考'], dim: 'SN', scores: [1, -1] },
+  { text: '解决问题时，你更倾向于？', options: ['参考过去的经验，用已证明有效的方法', '尝试全新的方法，也许有更好的解决方案'], dim: 'SN', scores: [1, -1] },
+  { text: '你更欣赏哪种人？', options: ['脚踏实地的实干家，说到做到', '天马行空的梦想家，总能想到别人想不到的'], dim: 'SN', scores: [1, -1] },
+  // T/F 维度 (7题)
+  { text: '好朋友做了一件你认为不对的事，你会？', options: ['直接指出问题，即使可能会伤害对方', '委婉地表达关心，先照顾对方的感受'], dim: 'TF', scores: [1, -1] },
+  { text: '做一个重要决定时，你更看重？', options: ['客观分析利弊，选择最合理的方案', '考虑这个决定会影响到哪些人的感受'], dim: 'TF', scores: [1, -1] },
+  { text: '你觉得"公平"意味着？', options: ['一视同仁，按规则办事', '根据每个人的具体情况灵活处理'], dim: 'TF', scores: [1, -1] },
+  { text: '同事在工作中犯了错，你会？', options: ['直接指出错误，帮助对方改进', '私下温和地提醒，注意不伤对方自尊'], dim: 'TF', scores: [1, -1] },
+  { text: '看新闻时，你更关注？', options: ['事件的事实和数据，分析原因和影响', '事件中的人情冷暖，关注当事人的感受'], dim: 'TF', scores: [1, -1] },
+  { text: '在讨论中产生分歧时，你更可能？', options: ['用逻辑和论据说服对方', '尝试理解对方的立场，寻找共识'], dim: 'TF', scores: [1, -1] },
+  { text: '你觉得下面哪个更重要？', options: ['真相和正确性', '和谐与人际关系'], dim: 'TF', scores: [1, -1] },
+  // J/P 维度 (7题)
+  { text: '关于计划，你更认同？', options: ['提前做好详细计划让我安心', '随性一点，计划赶不上变化'], dim: 'JP', scores: [1, -1] },
+  { text: '你的房间/桌面通常是？', options: ['整洁有序，东西都有固定的位置', '有点乱但我知道东西在哪，乱中有序'], dim: 'JP', scores: [1, -1] },
+  { text: '面对截止日期，你通常？', options: ['提前完成，留出检查和修改的时间', '在最后期限前冲刺，压力下效率最高'], dim: 'JP', scores: [1, -1] },
+  { text: '出去旅游，你更喜欢？', options: ['提前规划好每天的行程和住宿', '到了目的地再随性安排，随心所欲'], dim: 'JP', scores: [1, -1] },
+  { text: '你觉得规则和制度？', options: ['很重要，应该严格遵守', '是参考，必要时可以灵活变通'], dim: 'JP', scores: [1, -1] },
+  { text: '早上起床后，你通常会？', options: ['按固定的时间起床，开始一天的安排', '看心情和状态，没有固定作息'], dim: 'JP', scores: [1, -1] },
+  { text: '对于购物清单，你的态度是？', options: ['列好清单，按计划购买，不乱花钱', '逛到哪买到哪，看到喜欢的就下手'], dim: 'JP', scores: [1, -1] }
+];
+
+// ==================== 测试2：动物人格测试（12题） ====================
+const animalQuestions = [
+  { text: '在团队项目中，你通常扮演什么角色？', options: ['制定整体方案，把控方向', '分析问题，提出创新想法', '协调团队关系，鼓励每个人', '默默完成分配的任务，确保质量'] },
+  { text: '周末早上，你最想做什么？', options: ['规划下周的重要事项', '研究一个感兴趣的新话题', '约朋友出来玩或参加聚会', '在家享受安静的时光'], dim: 'NT,NF,SJ,SP' },
+  { text: '面对一个重大决定，你会？', options: ['快速分析利弊，果断做出选择', '从多个角度思考，寻找最优解', '考虑这个决定对他人的影响', '凭直觉做出选择，相信自己的感觉'] },
+  { text: '你最欣赏的品质是？', options: ['果断和领导力', '智慧和创造力', '善良和同理心', '勇敢和行动力'] },
+  { text: '在社交场合中，你更像？', options: ['自信地表达自己的观点', '和志同道合的人深入交流', '照顾每个人的感受，让大家都舒服', '安静地观察，偶尔说几句精辟的话'] },
+  { text: '你理想的工作环境是？', options: ['有挑战性、能发挥领导力的环境', '自由开放、鼓励创新的环境', '和谐温暖、团队互助的环境', '独立自主、少被干扰的环境'] },
+  { text: '遇到冲突时，你通常会？', options: ['正面解决，用逻辑说服对方', '分析问题的根源，寻找创造性解决方案', '先安抚情绪，再解决问题', '先冷静一下，等情绪平复再处理'] },
+  { text: '你更喜欢哪种类型的电影？', options: ['战争片或商战片', '科幻片或悬疑片', '文艺片或温情片', '动作片或冒险片'] },
+  { text: '关于未来，你的态度是？', options: ['有明确的长期规划和目标', '充满好奇，想探索各种可能性', '希望自己和身边的人都幸福', '活在当下，不过多想未来'] },
+  { text: '你觉得自己最大的优点是？', options: ['高效和执行力', '聪明和创新', '善解人意和温暖', '冷静和适应力'] },
+  { text: '朋友向你倾诉烦恼，你会？', options: ['帮对方分析问题，给出解决方案', '从不同角度帮对方看问题', '认真倾听，给予情感上的支持', '用幽默化解对方的烦恼'] },
+  { text: '如果用一个词形容自己，你会选？', options: ['坚定', '独特', '温柔', '自由'] }
+];
+
+// 动物映射
+const animalMap = {
+  'INTJ': { animal: '猫头鹰', emoji: '🦉', desc: '猫头鹰型人格拥有深邃的智慧和远见。你像猫头鹰一样在暗处静静观察，洞察一切。你不随波逐流，有着自己独特的见解和坚定的信念。你的智慧和深度让身边的人敬佩不已。' },
+  'INTP': { animal: '狐狸', emoji: '🦊', desc: '狐狸型人格聪明机智，充满好奇心。你像狐狸一样灵活多变，总能找到解决问题的巧妙方法。你对世界充满了好奇，喜欢探索未知的领域。你的幽默和智慧让你在人群中脱颖而出。' },
+  'ENTJ': { animal: '狮子', emoji: '🦁', desc: '狮子型人格是天生的王者，拥有强大的领导力和决断力。你像狮子一样勇敢自信，总能在关键时刻挺身而出。你的气场和魄力让身边的人不由自主地追随你。' },
+  'ENTP': { animal: '海豚', emoji: '🐬', desc: '海豚型人格聪明活泼，充满创造力。你像海豚一样灵动有趣，总能在交流中带来惊喜。你的思维敏捷，善于从不同角度看问题。你的热情和幽默感染着身边的每一个人。' },
+  'INFJ': { animal: '鹿', emoji: '🦌', desc: '鹿型人格温柔而深邃，拥有敏锐的直觉。你像鹿一样优雅安静，但内心充满了力量和信念。你能感受到他人察觉不到的情感波动，是天生的倾听者和治愈者。' },
+  'INFP': { animal: '蝴蝶', emoji: '🦋', desc: '蝴蝶型人格美丽而独特，拥有丰富的内心世界。你像蝴蝶一样追求美好和自由，用自己独特的方式感受世界。你的创造力和想象力让你成为最独特的存在。' },
+  'ENFJ': { animal: '孔雀', emoji: '🦚', desc: '孔雀型人格魅力四射，是天生的领袖和激励者。你像孔雀一样自信绽放，用自己的光芒照亮身边的人。你善于发现他人的潜力，并帮助他们成为更好的自己。' },
+  'ENFP': { animal: '金毛犬', emoji: '🐕', desc: '金毛型人格热情温暖，是所有人的好朋友。你像金毛一样忠诚友善，总能给身边的人带来快乐和温暖。你的热情和真诚让你走到哪里都受欢迎。' },
+  'ISTJ': { animal: '蜜蜂', emoji: '🐝', desc: '蜜蜂型人格勤劳可靠，是团队的中流砥柱。你像蜜蜂一样勤奋踏实，做事有条不紊。你的可靠和稳定让身边的人感到安心，是值得信赖的伙伴。' },
+  'ISFJ': { animal: '天鹅', emoji: '🦢', desc: '天鹅型人格优雅温暖，默默守护着身边的人。你像天鹅一样温柔而坚定，在平静的外表下有着强大的内心。你的体贴和关怀让身边的人感到被珍视。' },
+  'ESTJ': { animal: '鹰', emoji: '🦅', desc: '鹰型人格果断高效，是天生的管理者和执行者。你像鹰一样目光锐利，总能迅速发现问题并采取行动。你的高效和决断力让你在任何领域都能取得成功。' },
+  'ESFJ': { animal: '企鹅', emoji: '🐧', desc: '企鹅型人格温暖友善，是团队中的粘合剂。你像企鹅一样重视群体和合作，总能营造和谐的氛围。你的热心和体贴让每个人都感到被关心和被重视。' },
+  'ISTP': { animal: '猎豹', emoji: '🐆', desc: '猎豹型人格冷静而敏捷，是行动派的代表。你像猎豹一样沉着冷静，在关键时刻展现出惊人的爆发力。你的实际能力和冷静判断让你在任何情况下都能从容应对。' },
+  'ISFP': { animal: '熊猫', emoji: '🐼', desc: '熊猫型人格温和可爱，有着独特的魅力。你像熊猫一样看起来温和无害，但内心有着自己的坚持和原则。你对美有着天生的感知力，善于发现生活中的小确幸。' },
+  'ESTP': { animal: '老虎', emoji: '🐯', desc: '老虎型人格充满活力和冒险精神。你像老虎一样勇猛果敢，敢于挑战一切。你的行动力和应变能力让你在竞争中总能占据优势，是天生的冒险家。' },
+  'ESFP': { animal: '海獭', emoji: '🦦', desc: '海獭型人格活泼开朗，是快乐的传播者。你像海獭一样享受生活的每一刻，用自己独特的方式感染身边的人。你的乐观和热情让世界变得更加美好。' }
+};
+
+// ==================== 测试3：社交风格测试（10题） ====================
+const socialQuestions = [
+  { text: '参加一个聚会，你会？', options: ['主动成为焦点，组织大家玩游戏', '和几个熟悉的朋友待在一起聊天', '找个安静的角落，观察大家', '到处串桌，和每个人都能聊上几句'] },
+  { text: '朋友之间产生矛盾来找你调解，你会？', options: ['明确指出谁对谁错，给出解决方案', '两边都安慰，努力让大家和好', '给每个人单独的空间，让他们自己解决', '用幽默化解尴尬，转移话题'] },
+  { text: '在群聊中，你通常是？', options: ['发起话题、组织活动的那个人', '积极回应，让每个人都参与进来', '偶尔冒泡，但每句话都有分量', '发表情包和段子，活跃气氛'] },
+  { text: '新加入一个团队，你会？', options: ['快速了解团队结构，主动承担领导角色', '主动认识每个人，建立友好关系', '默默观察团队文化，找到自己的位置', '用幽默打破僵局，快速融入'] },
+  { text: '面对一个不喜欢的社交活动，你会？', options: ['直接拒绝，不浪费自己的时间', '考虑到组织者的感受，还是去了', '找个借口婉拒，避免尴尬', '去了但只待一会儿，中途溜走'] },
+  { text: '你更喜欢哪种聊天方式？', options: ['面对面深入讨论重要话题', '打电话或语音，能听到对方的声音', '发文字消息，可以慢慢想怎么回复', '无所谓，什么方式都行，看心情'] },
+  { text: '在朋友圈/社交媒体上，你通常？', options: ['分享有深度的观点或专业内容', '转发温暖正能量的内容', '很少发，偶尔发一些精心挑选的照片', '经常发日常动态，分享生活的点滴'] },
+  { text: '遇到一个有趣的人，你会？', options: ['直接上去搭话，交换联系方式', '通过共同朋友介绍，慢慢认识', '默默关注，等合适的时机再接触', '马上约对方一起参加活动'] },
+  { text: '你觉得好朋友之间最重要的是？', options: ['互相尊重和支持彼此的目标', '情感上的理解和支持', '给彼此足够的空间和自由', '一起经历有趣的事情'] },
+  { text: '在团队合作中，你最不能忍受的是？', options: ['效率低下、缺乏方向', '团队成员之间关系不和谐', '被强迫做自己不想做的事', '无聊和缺乏创意'] }
+];
+
+// 社交风格结果
+const socialStyles = {
+  leader: {
+    name: '领导者型',
+    emoji: '👑',
+    desc: '你是天生的社交领袖，在人群中总是自然而然地成为焦点。你善于组织活动、协调关系，你的自信和决断力让身边的人愿意追随你。你享受带领团队达成目标的过程。',
+    mbtiRange: 'ENTJ、ESTJ、ENFJ、ESFJ',
+    advice: ['发挥你的组织能力，但也要学会倾听他人的意见', '不要总是承担所有责任，适当放权', '在领导的同时，也要关注团队成员的情感需求', '学会在非工作场合放松自己，享受纯粹的社交乐趣']
+  },
+  harmony: {
+    name: '和谐型',
+    emoji: '🕊️',
+    desc: '你是社交中的和平使者，善于营造和谐的氛围。你对他人的情感有着敏锐的感知力，总能在冲突中找到平衡点。你的温暖和体贴让身边的人感到被理解和被珍视。',
+    mbtiRange: 'INFJ、INFP、ISFJ、ENFJ',
+    advice: ['你的同理心是宝贵的品质，但也要学会保护自己', '不要总是为了和谐而压抑自己的真实想法', '学会在必要时表达不满，设立健康的边界', '在照顾他人的同时，也要关注自己的情感需求']
+  },
+  independent: {
+    name: '独立型',
+    emoji: '🏔️',
+    desc: '你是社交中的独立思考者，不随波逐流。你享受独处的时光，但也能在需要时与人建立深层次的连接。你的深度和独特性让真正了解你的人对你着迷。',
+    mbtiRange: 'INTJ、INTP、ISTJ、ISTP',
+    advice: ['适当走出舒适区，尝试新的社交活动', '你的深度是优势，但有时也需要轻松的社交', '学会在独处和社交之间找到平衡', '让更多人看到你有趣的一面']
+  },
+  energetic: {
+    name: '活力型',
+    emoji: '🎉',
+    desc: '你是社交中的能量源泉，走到哪里都能带来欢乐。你善于打破僵局，让每个人都感到轻松愉快。你的热情和幽默是聚会上最宝贵的财富。',
+    mbtiRange: 'ENTP、ENFP、ESTP、ESFP',
+    advice: ['你的活力很有感染力，但也要学会安静地倾听', '在追求新鲜感的同时，也要维护深层的友谊', '注意社交的深度，不要只停留在表面', '适当独处，给自己充电的时间']
+  }
+};
+
+// ==================== 测试4：恋爱类型测试（10题） ====================
+const loveQuestions = [
+  { text: '理想的约会方式是？', options: ['精心策划的浪漫晚餐，每个细节都到位', '一起参加有趣的活动，比如手工课或看展', '来一场说走就走的旅行，充满惊喜', '在家做一顿饭，窝在沙发上看电影'] },
+  { text: '你表达爱意的方式是？', options: ['用实际行动帮对方解决问题', '写一封深情的信或准备一个有意义的礼物', '带对方去体验新事物，创造共同回忆', '日常的小关心：早安晚安、记住对方喜欢什么'] },
+  { text: '恋爱中遇到矛盾，你会？', options: ['冷静分析问题所在，理性讨论解决方案', '先安抚对方的情绪，再慢慢沟通', '给彼此一些空间，等情绪平复再谈', '用拥抱和甜蜜化解矛盾'] },
+  { text: '你对恋爱关系的期望是？', options: ['共同成长，成为更好的自己', '深层的情感连接和灵魂共鸣', '保持自由和新鲜感，不被束缚', '温暖稳定的陪伴，简单的幸福'] },
+  { text: '伴侣做了让你不开心的事，你会？', options: ['直接告诉对方，坦诚沟通', '先忍一忍，找个合适的时机再说', '用行动暗示对方，希望对方自己发现', '撒娇或开玩笑地表达不满'] },
+  { text: '你觉得恋爱中最重要的是？', options: ['信任和尊重', '理解和包容', '自由和个人空间', '陪伴和亲密'] },
+  { text: '收到伴侣的礼物，你更希望是？', options: ['对方精心准备的、有实用价值的礼物', '手写的信或充满回忆的相册', '一次惊喜的体验，比如跳伞或旅行', '日常的小惊喜，比如一杯喜欢的奶茶'] },
+  { text: '关于恋爱中的个人空间，你的态度是？', options: ['有各自的事业和爱好，但保持良好的沟通', '需要一定的独处时间来恢复能量', '个人空间非常重要，不想被束缚', '恨不得24小时黏在一起'] },
+  { text: '你眼中的完美约会对象是？', options: ['有上进心、有目标、能和你一起奋斗的人', '温柔体贴、善解人意、能给你情感支持的人', '有趣、爱冒险、总能给你带来惊喜的人', '简单真诚、陪你做平凡小事也很幸福的人'] },
+  { text: '恋爱中你最害怕的是？', options: ['失去信任和安全感', '感情变淡，失去深度连接', '被束缚，失去自由', '平淡无味，缺少激情'] }
+];
+
+// 恋爱风格结果
+const loveStyles = {
+  romantic: {
+    name: '浪漫守护型',
+    emoji: '🌹',
+    desc: '你在恋爱中是忠诚而深情的守护者。你注重承诺和责任，愿意为伴侣付出一切。你的爱是深沉而持久的，像一棵大树，为对方遮风挡雨。在你看来，真正的爱情是两个人共同成长、相互扶持。',
+    mbtiRange: 'INFJ、ISFJ、ENFJ、ESFJ',
+    bestMatch: '温暖陪伴型',
+    advice: ['你的深情是珍贵的，但也要学会表达自己的需求', '不要总是默默付出，让对方知道你的感受', '在守护对方的同时，也要保持自我成长', '偶尔制造一些小惊喜，让感情保持新鲜感']
+  },
+  rational: {
+    name: '理性伙伴型',
+    emoji: '💎',
+    desc: '你在恋爱中是理性而可靠的伙伴。你注重沟通和理解，善于用成熟的方式处理感情问题。你相信好的爱情需要双方的共同努力和经营。你的稳定和智慧让伴侣感到安心。',
+    mbtiRange: 'INTJ、INTP、ENTJ、ENTP',
+    bestMatch: '浪漫守护型',
+    advice: ['感情中不仅需要理性，也需要感性的表达', '试着用更温柔的方式表达爱意', '不要总是试图"解决"对方的情绪问题，有时只需要倾听', '偶尔放下逻辑，享受纯粹的情感时刻']
+  },
+  free: {
+    name: '自由灵魂型',
+    emoji: '🌊',
+    desc: '你在恋爱中追求自由和新鲜感。你不喜欢被束缚，希望和伴侣一起探索世界的精彩。你的活力和冒险精神让恋爱充满了惊喜和乐趣。在你看来，最好的爱情是两个人一起成长，但保持各自的独立。',
+    mbtiRange: 'ESTP、ESFP,ISTP,ISFP',
+    bestMatch: '自由灵魂型',
+    advice: ['在追求自由的同时，也要给伴侣安全感', '学会在冒险和稳定之间找到平衡', '深度连接比新鲜感更能维系长久的感情', '偶尔放慢脚步，享受安静的二人世界']
+  },
+  warm: {
+    name: '温暖陪伴型',
+    emoji: '☕',
+    desc: '你在恋爱中是最温暖的陪伴者。你享受和伴侣在一起的每一个平凡瞬间，一顿简单的早餐、一个拥抱、一次散步都能让你感到幸福。你的真诚和温暖让伴侣感到被深深爱着。',
+    mbtiRange: 'INFP、ENFP、ISFJ、ESFJ',
+    bestMatch: '理性伙伴型',
+    advice: ['你的温暖是珍贵的，但也要学会独立', '不要因为害怕冲突而压抑自己的真实想法', '在享受陪伴的同时，也要保持自己的兴趣爱好', '学会接受变化，感情需要不断成长']
+  }
+};
+
+// ==================== 测试5：职场MBTI测试（10题） ====================
+const careerQuestions = [
+  { text: '在工作中，你更喜欢？', options: ['制定战略和规划方向', '提出创新的想法和解决方案', '协调团队关系，确保大家合作愉快', '专注于具体的任务执行'] },
+  { text: '面对一个复杂的项目，你会？', options: ['先制定详细的计划和里程碑', '先研究各种可能的方案和新技术', '先了解团队成员的特长，合理分配任务', '直接开始做，边做边调整'] },
+  { text: '你觉得工作中最重要的是？', options: ['效率和成果', '创新和学习', '团队合作和氛围', '稳定和可预测性'] },
+  { text: '开会时，你通常会？', options: ['主导会议，确保讨论高效进行', '提出有创意的想法和建议', '关注每个人的参与度，鼓励沉默的成员发言', '认真记录，会后整理要点'] },
+  { text: '你的工作风格更接近？', options: ['目标导向，以结果论英雄', '灵活多变，喜欢尝试新方法', '以人为本，注重团队和谐', '按部就班，确保质量和稳定'] },
+  { text: '面对工作压力，你会？', options: ['制定计划，一步步解决问题', '换个角度思考，寻找突破口', '和同事聊聊，寻求支持和建议', '按优先级处理，一件一件来'] },
+  { text: '你理想的上司是？', options: ['有远见、能给你明确方向的领导', '开放包容、鼓励创新的领导', '关心下属、善于激励的领导', '公平公正、赏罚分明的领导'] },
+  { text: '关于加班，你的态度是？', options: ['为了达成目标，加班是必要的', '如果是为了有趣的项目，不介意加班', '尽量避免，工作生活平衡很重要', '按约定来，不该加的班不加'] },
+  { text: '你更擅长？', options: ['宏观规划和战略决策', '分析和解决复杂问题', '沟通协调和团队建设', '执行和落地具体任务'] },
+  { text: '如果可以选，你最想从事的工作是？', options: ['CEO或高管，引领企业发展', '科学家或研究员，探索未知领域', 'HR或咨询师，帮助他人成长', '工程师或专家，深耕专业领域'] }
+];
+
+// 职场风格结果
+const careerStyles = {
+  strategist: {
+    name: '战略家',
+    emoji: '♟️',
+    desc: '你是职场中的战略思考者，拥有卓越的远见和规划能力。你善于从全局出发制定战略，并带领团队朝着目标前进。你的决断力和领导力让你在管理岗位上如鱼得水。',
+    mbtiRange: 'ENTJ、INTJ、ESTJ、ISTJ',
+    jobs: 'CEO、战略顾问、项目经理、企业高管',
+    advice: ['发挥你的战略思维优势，但也要关注执行细节', '倾听团队成员的想法，集思广益', '在追求效率的同时，也要关注团队氛围', '持续学习新知识，保持思维的开放性']
+  },
+  innovator: {
+    name: '创新者',
+    emoji: '💡',
+    desc: '你是职场中的创意引擎，总能提出令人耳目一新的想法。你不满足于现状，总是寻找更好的解决方案。你的创造力和洞察力让你在需要创新的领域大放异彩。',
+    mbtiRange: 'ENTP、INTP、ENFP、INFP',
+    jobs: '产品经理、设计师、研究员、创业者',
+    advice: ['将创意付诸实践，不要只停留在想法层面', '学会筛选和优先处理你的想法', '在创新的同时，也要注意可行性和落地性', '和执行力强的人合作，互补优势']
+  },
+  coordinator: {
+    name: '协调者',
+    emoji: '🤝',
+    desc: '你是职场中的团队粘合剂，善于协调各方关系、营造和谐的工作氛围。你对他人的需求有着敏锐的感知力，总能在团队中发挥润滑剂的作用。你的沟通能力和同理心让你在管理岗位上同样出色。',
+    mbtiRange: 'ENFJ、ESFJ、INFJ、ISFJ',
+    jobs: '人力资源、公关、客户经理、教师',
+    advice: ['发挥你的沟通优势，但也要学会做艰难的决定', '在关注他人的同时，也要维护自己的权益', '提升数据分析能力，用数据支撑你的判断', '适当学习冲突管理技巧']
+  },
+  executor: {
+    name: '执行者',
+    emoji: '⚙️',
+    desc: '你是职场中的实干家，拥有强大的执行力和专业技能。你注重细节和质量，总能将计划完美地落地。你的可靠和专业让你成为团队中不可或缺的一员。',
+    mbtiRange: 'ISTP、ISFP、ESTP、ESFP',
+    jobs: '工程师、技术专家、自由职业者、运动员',
+    advice: ['你的执行力是优势，但也要培养战略思维', '学会向上管理，让领导看到你的贡献', '在专注执行的同时，也要关注行业趋势', '适当参与团队决策，展现你的见解']
+  }
+};
+
+// ==================== 测试6：美食偏好测试（8题） ====================
+const foodQuestions = [
+  { text: '去餐厅吃饭，你会？', options: ['提前研究菜单和评价，选最好的', '让朋友推荐，或者选没试过的', '看心情，走到哪吃到哪', '选一家熟悉的店，点常吃的菜'] },
+  { text: '关于做饭，你的态度是？', options: ['严格按照食谱来，精确到克', '喜欢自由发挥，经常发明新菜式', '很少做饭，更喜欢出去吃', '喜欢做家常菜，享受烹饪的过程'] },
+  { text: '点外卖时，你通常会？', options: ['花很长时间比较各家店', '经常尝试新店和新品', '随便选一家，快点送到就行', '只点那几家最信任的店'] },
+  { text: '朋友请客吃饭，你更希望去？', options: ['有格调的高级餐厅', '新开的网红店或异国料理', '热闹的大排档或烧烤', '温馨的家常菜馆'] },
+  { text: '关于吃辣，你的态度是？', options: ['看场合，正式场合不点辣的', '越辣越好，追求刺激', '无所谓，什么都行', '不太能吃辣，喜欢清淡的'] },
+  { text: '你更喜欢哪种饮食方式？', options: ['精致的健康餐，注重营养搭配', '世界各地的美食都想尝试', '有什么吃什么，不挑食', '妈妈做的菜就是最好吃的'] },
+  { text: '逛超市时，你会？', options: ['列好购物清单，按计划购买', '看到新奇的食物就想买来试试', '随便逛逛，看到什么顺眼买什么', '买熟悉的品牌和食材'] },
+  { text: '关于甜品，你的态度是？', options: ['喜欢精致的法式甜品', '喜欢各种创意甜品', '不太爱吃甜的', '喜欢简单的水果和酸奶'] }
+];
+
+// 美食人格结果
+const foodStyles = {
+  exquisite: {
+    name: '精致料理家',
+    emoji: '🍷',
+    desc: '你对美食有着极高的品质要求，享受精致的生活。你注重食材的选择和烹饪的细节，每一餐都是一次美好的仪式。你追求的不仅是味道，更是用餐的整体体验。',
+    mbtiRange: 'INTJ、ISTJ、ENTJ、ESTJ',
+    restaurant: '高级法餐厅、日式怀石料理、精品咖啡厅',
+    dish: '松露意面、和牛牛排、精品手冲咖啡'
+  },
+  adventurous: {
+    name: '冒险尝鲜派',
+    emoji: '🌶️',
+    desc: '你是美食界的冒险家，对世界各地的美食都充满好奇。你勇于尝试新奇的食材和口味，每一次用餐都是一次味蕾的探险。你的美食地图永远在扩展中。',
+    mbtiRange: 'ENTP、ENFP、ESTP、ESFP',
+    restaurant: '异国风味餐厅、网红打卡店、街头美食',
+    dish: '泰式冬阴功、墨西哥塔可、日式拉面'
+  },
+  casual: {
+    name: '随性美食家',
+    emoji: '🍕',
+    desc: '你对美食的态度随性而开放，不拘泥于形式。你觉得好吃的东西就是好东西，不管是在米其林餐厅还是路边小摊。你的洒脱和包容让你总能发现美食中的惊喜。',
+    mbtiRange: 'ISTP、ISFP、INTP、INFP',
+    restaurant: '任何看起来不错的地方',
+    dish: '什么好吃吃什么，没有固定偏好'
+  },
+  homey: {
+    name: '温馨家常派',
+    emoji: '🍲',
+    desc: '你最爱的美食是家的味道。你觉得一碗热腾腾的家常菜比任何山珍海味都让人满足。你注重食物的温度和情感，每一顿饭都是一次温暖的享受。',
+    mbtiRange: 'ISFJ、ESFJ、INFJ、ENFJ',
+    restaurant: '温馨的家常菜馆、社区小馆、早茶店',
+    dish: '红烧肉、番茄鸡蛋面、妈妈牌拿手菜'
+  }
+};
+
+// ==================== 测试配置汇总 ====================
+const testConfigs = {
+  classic: {
+    title: '经典MBTI性格测试',
+    subtitle: '回答28道问题，发现你的四维性格类型',
+    optionType: 'ab',
+    questions: classicQuestions,
+    calculateResult: function(answers) {
+      // 计算各维度得分
+      let scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+      classicQuestions.forEach((q, i) => {
+        const ans = answers[i];
+        if (ans === undefined) return;
+        const score = q.scores[ans];
+        if (q.dim === 'EI') { score > 0 ? scores.E++ : scores.I++; }
+        if (q.dim === 'SN') { score > 0 ? scores.S++ : scores.N++; }
+        if (q.dim === 'TF') { score > 0 ? scores.T++ : scores.F++; }
+        if (q.dim === 'JP') { score > 0 ? scores.J++ : scores.P++; }
+      });
+
+      const type = (scores.E >= scores.I ? 'E' : 'I') +
+                   (scores.S >= scores.N ? 'S' : 'N') +
+                   (scores.T >= scores.F ? 'T' : 'F') +
+                   (scores.J >= scores.P ? 'J' : 'P');
+
+      const data = mbtiData[type];
+      const totalEI = scores.E + scores.I;
+      const totalSN = scores.S + scores.N;
+      const totalTF = scores.T + scores.F;
+      const totalJP = scores.J + scores.P;
+
+      const copyText = `我的MBTI类型是${type}（${data.name}）！\n${data.description}\n关键词：${data.tags.join('、')}\n最佳配对：${data.bestMatch}`;
+
+      return {
+        html: `
+          <div class="result-container">
+            <span class="result-emoji">${data.emoji}</span>
+            <div class="result-type-badge">${type}</div>
+            <div class="result-name">${data.name}</div>
+            <div class="result-tags">
+              ${data.tags.map(t => `<span class="result-tag">${t}</span>`).join('')}
+            </div>
+            <div class="result-description">${data.description}</div>
+
+            <div class="result-section">
+              <h4>维度分析</h4>
+              <div class="dimension-bar">
+                <div class="dim-label"><span>外向 E (${scores.E})</span><span>内向 I (${scores.I})</span></div>
+                <div class="dim-track"><div class="dim-left" style="width:${(scores.E/totalEI*100).toFixed(0)}%"></div><div class="dim-right" style="width:${(scores.I/totalEI*100).toFixed(0)}%"></div></div>
+              </div>
+              <div class="dimension-bar">
+                <div class="dim-label"><span>感觉 S (${scores.S})</span><span>直觉 N (${scores.N})</span></div>
+                <div class="dim-track"><div class="dim-left" style="width:${(scores.S/totalSN*100).toFixed(0)}%"></div><div class="dim-right" style="width:${(scores.N/totalSN*100).toFixed(0)}%"></div></div>
+              </div>
+              <div class="dimension-bar">
+                <div class="dim-label"><span>思维 T (${scores.T})</span><span>情感 F (${scores.F})</span></div>
+                <div class="dim-track"><div class="dim-left" style="width:${(scores.T/totalTF*100).toFixed(0)}%"></div><div class="dim-right" style="width:${(scores.F/totalTF*100).toFixed(0)}%"></div></div>
+              </div>
+              <div class="dimension-bar">
+                <div class="dim-label"><span>判断 J (${scores.J})</span><span>感知 P (${scores.P})</span></div>
+                <div class="dim-track"><div class="dim-left" style="width:${(scores.J/totalJP*100).toFixed(0)}%"></div><div class="dim-right" style="width:${(scores.P/totalJP*100).toFixed(0)}%"></div></div>
+              </div>
+            </div>
+
+            <div class="result-section">
+              <h4>你的优势</h4>
+              <ul>${data.strengths.map(s => `<li>${s}</li>`).join('')}</ul>
+            </div>
+
+            <div class="result-section">
+              <h4>需要注意</h4>
+              <ul>${data.weaknesses.map(w => `<li>${w}</li>`).join('')}</ul>
+            </div>
+
+            <div class="result-section">
+              <h4>代表人物</h4>
+              <p style="font-size:0.9rem;color:var(--gray-700)">${data.famous}</p>
+            </div>
+
+            <div class="result-section">
+              <h4>最佳配对</h4>
+              <p style="font-size:1.1rem;font-weight:600;color:var(--teal)">${data.bestMatch}</p>
+            </div>
+
+            <div class="result-section">
+              <h4>成长建议</h4>
+              <p style="font-size:0.9rem;color:var(--gray-700);line-height:1.8">${data.advice}</p>
+            </div>
+
+            <div class="btn-group">
+              <button class="btn btn-share" onclick="copyResult(\`${copyText.replace(/`/g, '\\`')}\')">分享结果</button>
+              <button class="btn btn-primary" onclick="retakeTest()">重新测试</button>
+              <button class="btn btn-secondary" onclick="goHome()">返回首页</button>
+            </div>
+          </div>
+        `
+      };
+    }
+  },
+
+  animal: {
+    title: 'MBTI动物人格测试',
+    subtitle: '12道题，发现你的动物人格',
+    optionType: 'grid',
+    questions: animalQuestions,
+    calculateResult: function(answers) {
+      // 每题选0=NT(INTJ/INTP/ENTJ/ENTP), 1=NF(INFJ/INFP/ENFJ/ENFP), 2=SJ(ISTJ/ISFJ/ESTJ/ESFJ), 3=SP(ISTP/ISFP/ESTP/ESFP)
+      let counts = [0, 0, 0, 0]; // NT, NF, SJ, SP
+      Object.values(answers).forEach(a => { counts[a]++; });
+      const maxIdx = counts.indexOf(Math.max(...counts));
+
+      // 进一步细分
+      const typeMap = [
+        ['INTJ', 'INTP', 'ENTJ', 'ENTP'], // NT
+        ['INFJ', 'INFP', 'ENFJ', 'ENFP'], // NF
+        ['ISTJ', 'ISFJ', 'ESTJ', 'ESFJ'], // SJ
+        ['ISTP', 'ISFP', 'ESTP', 'ESFP']  // SP
+      ];
+
+      // 用后半部分题目区分I/E
+      let eCount = 0, iCount = 0;
+      for (let i = 6; i < 12; i++) {
+        const a = answers[i];
+        if (a === 0 || a === 2) eCount++;
+        else iCount++;
+      }
+
+      const types = typeMap[maxIdx];
+      const isE = eCount >= iCount;
+      // 简单分配：前两个是I，后两个是E
+      let type;
+      if (isE) {
+        type = counts[0] % 2 === 0 ? types[3] : types[2];
+      } else {
+        type = counts[0] % 2 === 0 ? types[0] : types[1];
+      }
+
+      const animal = animalMap[type];
+      const data = mbtiData[type];
+      const copyText = `我的动物人格是${animal.emoji}${animal.animal}！\n对应MBTI类型：${type}（${data.name}）\n${animal.desc}`;
+
+      return {
+        html: `
+          <div class="animal-result-card">
+            <span class="animal-emoji">${animal.emoji}</span>
+            <div class="animal-name">${animal.animal}</div>
+            <div class="animal-mbti">${type} - ${data.name}</div>
+            <div class="result-tags" style="justify-content:center;margin-bottom:20px">
+              ${data.tags.map(t => `<span class="result-tag">${t}</span>`).join('')}
+            </div>
+            <p style="font-size:0.95rem;color:var(--gray-700);line-height:1.8;text-align:left;padding:0 10px;margin-bottom:20px">${animal.desc}</p>
+
+            <div class="result-section">
+              <h4>性格概述</h4>
+              <p style="font-size:0.9rem;color:var(--gray-700);line-height:1.8">${data.description}</p>
+            </div>
+
+            <div class="result-section">
+              <h4>你的优势</h4>
+              <ul>${data.strengths.map(s => `<li>${s}</li>`).join('')}</ul>
+            </div>
+
+            <div class="result-section">
+              <h4>代表人物</h4>
+              <p style="font-size:0.9rem;color:var(--gray-700)">${data.famous}</p>
+            </div>
+
+            <div class="result-section">
+              <h4>最佳配对</h4>
+              <p style="font-size:1.1rem;font-weight:600;color:var(--teal)">${data.bestMatch}</p>
+            </div>
+
+            <div class="btn-group">
+              <button class="btn btn-share" onclick="copyResult(\`${copyText.replace(/`/g, '\\`')}\')">分享结果</button>
+              <button class="btn btn-primary" onclick="retakeTest()">重新测试</button>
+              <button class="btn btn-secondary" onclick="goHome()">返回首页</button>
+            </div>
+          </div>
+        `
+      };
+    }
+  },
+
+  social: {
+    title: 'MBTI社交风格测试',
+    subtitle: '10道题，发现你的社交密码',
+    optionType: 'grid',
+    questions: socialQuestions,
+    calculateResult: function(answers) {
+      // 0=领导者, 1=和谐型, 2=独立型, 3=活力型
+      let counts = [0, 0, 0, 0];
+      Object.values(answers).forEach(a => { counts[a]++; });
+      const maxIdx = counts.indexOf(Math.max(...counts));
+      const keys = ['leader', 'harmony', 'independent', 'energetic'];
+      const style = socialStyles[keys[maxIdx]];
+      const copyText = `我的社交风格是${style.emoji}${style.name}！\n${style.desc}\n对应MBTI类型范围：${style.mbtiRange}`;
+
+      return {
+        html: `
+          <div class="style-result-card">
+            <span class="style-icon">${style.emoji}</span>
+            <div class="style-title">${style.name}</div>
+            <div class="style-mbti-range">对应MBTI类型：${style.mbtiRange}</div>
+            <p style="font-size:0.95rem;color:var(--gray-700);line-height:1.8;margin-bottom:20px">${style.desc}</p>
+
+            <div class="advice-box">
+              <h4>社交建议</h4>
+              <ul>${style.advice.map(a => `<li>${a}</li>`).join('')}</ul>
+            </div>
+
+            <div class="btn-group">
+              <button class="btn btn-share" onclick="copyResult(\`${copyText.replace(/`/g, '\\`')}\')">分享结果</button>
+              <button class="btn btn-primary" onclick="retakeTest()">重新测试</button>
+              <button class="btn btn-secondary" onclick="goHome()">返回首页</button>
+            </div>
+          </div>
+        `
+      };
+    }
+  },
+
+  love: {
+    title: 'MBTI恋爱类型测试',
+    subtitle: '10道题，探索你的恋爱风格',
+    optionType: 'grid',
+    questions: loveQuestions,
+    calculateResult: function(answers) {
+      // 0=浪漫守护, 1=理性伙伴, 2=自由灵魂, 3=温暖陪伴
+      let counts = [0, 0, 0, 0];
+      Object.values(answers).forEach(a => { counts[a]++; });
+      const maxIdx = counts.indexOf(Math.max(...counts));
+      const keys = ['romantic', 'rational', 'free', 'warm'];
+      const style = loveStyles[keys[maxIdx]];
+      const copyText = `我的恋爱风格是${style.emoji}${style.name}！\n${style.desc}\n对应MBTI类型范围：${style.mbtiRange}\n最佳配对：${style.bestMatch}`;
+
+      return {
+        html: `
+          <div class="style-result-card">
+            <span class="style-icon">${style.emoji}</span>
+            <div class="style-title">${style.name}</div>
+            <div class="style-mbti-range">对应MBTI类型：${style.mbtiRange}</div>
+            <p style="font-size:0.95rem;color:var(--gray-700);line-height:1.8;margin-bottom:20px">${style.desc}</p>
+
+            <div class="match-card">
+              <span class="match-heart">💕</span>
+              <div class="match-info">
+                <div class="match-label">最佳恋爱配对</div>
+                <div class="match-value">${style.bestMatch}</div>
+              </div>
+            </div>
+
+            <div class="advice-box">
+              <h4>恋爱建议</h4>
+              <ul>${style.advice.map(a => `<li>${a}</li>`).join('')}</ul>
+            </div>
+
+            <div class="btn-group">
+              <button class="btn btn-share" onclick="copyResult(\`${copyText.replace(/`/g, '\\`')}\')">分享结果</button>
+              <button class="btn btn-primary" onclick="retakeTest()">重新测试</button>
+              <button class="btn btn-secondary" onclick="goHome()">返回首页</button>
+            </div>
+          </div>
+        `
+      };
+    }
+  },
+
+  career: {
+    title: '职场MBTI测试',
+    subtitle: '10道题，找到你的职场定位',
+    optionType: 'grid',
+    questions: careerQuestions,
+    calculateResult: function(answers) {
+      // 0=战略家, 1=创新者, 2=协调者, 3=执行者
+      let counts = [0, 0, 0, 0];
+      Object.values(answers).forEach(a => { counts[a]++; });
+      const maxIdx = counts.indexOf(Math.max(...counts));
+      const keys = ['strategist', 'innovator', 'coordinator', 'executor'];
+      const style = careerStyles[keys[maxIdx]];
+      const copyText = `我的职场风格是${style.emoji}${style.name}！\n${style.desc}\n适合岗位：${style.jobs}\n对应MBTI类型范围：${style.mbtiRange}`;
+
+      return {
+        html: `
+          <div class="style-result-card">
+            <span class="style-icon">${style.emoji}</span>
+            <div class="style-title">${style.name}</div>
+            <div class="style-mbti-range">对应MBTI类型：${style.mbtiRange}</div>
+            <p style="font-size:0.95rem;color:var(--gray-700);line-height:1.8;margin-bottom:20px">${style.desc}</p>
+
+            <div class="result-section">
+              <h4>适合的岗位类型</h4>
+              <p style="font-size:0.95rem;color:var(--teal);font-weight:600">${style.jobs}</p>
+            </div>
+
+            <div class="advice-box">
+              <h4>职业发展建议</h4>
+              <ul>${style.advice.map(a => `<li>${a}</li>`).join('')}</ul>
+            </div>
+
+            <div class="btn-group">
+              <button class="btn btn-share" onclick="copyResult(\`${copyText.replace(/`/g, '\\`')}\`)">分享结果</button>
+              <button class="btn btn-primary" onclick="retakeTest()">重新测试</button>
+              <button class="btn btn-secondary" onclick="goHome()">返回首页</button>
+            </div>
+          </div>
+        `
+      };
+    }
+  },
+
+  food: {
+    title: 'MBTI美食偏好测试',
+    subtitle: '8道题，发现你的美食人格',
+    optionType: 'grid',
+    questions: foodQuestions,
+    calculateResult: function(answers) {
+      // 0=精致料理家, 1=冒险尝鲜派, 2=随性美食家, 3=温馨家常派
+      let counts = [0, 0, 0, 0];
+      Object.values(answers).forEach(a => { counts[a]++; });
+      const maxIdx = counts.indexOf(Math.max(...counts));
+      const keys = ['exquisite', 'adventurous', 'casual', 'homey'];
+      const style = foodStyles[keys[maxIdx]];
+      const copyText = `我的美食人格是${style.emoji}${style.name}！\n${style.desc}\n推荐餐厅：${style.restaurant}\n推荐菜品：${style.dish}`;
+
+      return {
+        html: `
+          <div class="food-result-card">
+            <span class="food-emoji">${style.emoji}</span>
+            <div class="food-title">${style.name}</div>
+            <div class="style-mbti-range">对应MBTI类型：${style.mbtiRange}</div>
+            <p style="font-size:0.95rem;color:var(--gray-700);line-height:1.8;margin-bottom:20px">${style.desc}</p>
+
+            <div class="food-recommend">
+              <h4>推荐餐厅类型</h4>
+              <p>${style.restaurant}</p>
+            </div>
+
+            <div class="food-recommend">
+              <h4>推荐菜品</h4>
+              <p>${style.dish}</p>
+            </div>
+
+            <div class="btn-group">
+              <button class="btn btn-share" onclick="copyResult(\`${copyText.replace(/`/g, '\\`')}\`)">分享结果</button>
+              <button class="btn btn-primary" onclick="retakeTest()">重新测试</button>
+              <button class="btn btn-secondary" onclick="goHome()">返回首页</button>
+            </div>
+          </div>
+        `
+      };
+    }
+  }
+};
+
+// ==================== 初始化 ====================
+document.addEventListener('DOMContentLoaded', () => {
+  showSection('home');
+});
+</script>
+</body>
+</html>
